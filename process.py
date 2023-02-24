@@ -3,7 +3,7 @@
 import netCDF4
 import numpy as np
 import math
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # 辅助函数
 def getLocation(oriLat,oriLon):
@@ -153,3 +153,5 @@ if __name__ == "__main__":
     # plt.subplot(2,2,4)
     # plt.plot(data[3],color='brown',label='tmn',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
     # plt.show()
+
+
