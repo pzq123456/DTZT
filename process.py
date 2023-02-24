@@ -34,6 +34,25 @@ def contactLines(data1,data2,data3,data4):
     data = np.array([data1,data2,data3,data4])
     return data
 
+# generate the delete index list
+def getDeleteIndexList():
+    indexList = []
+    for i in range(0,56):
+        indexList.append(i)
+
+    for i in range(5,10):
+        for j in range(7,9):
+            indexList.append(i*12+j - 1)
+    return indexList
+
+# delete the data with the index list
+def deleteData(data,indexlist):
+    data = np.delete(data,indexlist,axis=1)
+    return data
+
+
+
+
 # 读取数据
 def readData():
     f1 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.pre.dat.nc')
@@ -57,6 +76,14 @@ def savePath(name):
     path = "DTZT/dataset/"+name+".npy"
     return path
 
+# save numpy array as CSV file function
+# data: the numpy array
+# name: the name of the numpy array
+def saveCSV(data,name):
+    path = "DTZT/dataset/"+name+".csv"
+    np.savetxt(path,data,delimiter=',')
+
+
 # save numpy array as the savePath function generated path
 def saveData(data,name):
     path = savePath(name)
@@ -75,33 +102,41 @@ def reportStart(i):
 def reportEnd(i):
     print("processed "+str(i)+" data")
 
+
 # main process function
 def process():
     pre,tmp,tmx,tmn= readData()
     metadata = readMetadata()
-    for i in range(0,1):
+    for i in range(90,len(metadata)):
         reportStart(i)
         lat,lon = getLocation(metadata[i][0],metadata[i][1])
         latIndex,lonIndex = getLocIndex(lat,lon)
+
         data1 = pre[:,latIndex,lonIndex]
         data2 = tmp[:,latIndex,lonIndex]
         data3 = tmx[:,latIndex,lonIndex]
         data4 = tmn[:,latIndex,lonIndex]
         data = contactLines(data1,data2,data3,data4)
-        print(data)
-        # visualize data line subplots 
-        plt.subplot(2,2,1)
-        plt.plot(data[0],color='red',label='pre',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
-        plt.subplot(2,2,2)
-        plt.plot(data[1],color='green',label='tmp',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
-        plt.subplot(2,2,3)
-        plt.plot(data[2],color='blue',label='tmx',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
-        plt.subplot(2,2,4)
-        plt.plot(data[3],color='brown',label='tmn',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
-        plt.show()
-        # saveData(data,str(i))
-        # reportEnd(i)
+        data2 = deleteData(data,getDeleteIndexList())
+        saveCSV(data,str(i))
+        reportEnd(i)
 
 
 if __name__ == "__main__":
     process()
+
+
+
+
+
+# print(data)
+    # # visualize data line subplots 
+    # plt.subplot(2,2,1)
+    # plt.plot(data[0],color='red',label='pre',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
+    # plt.subplot(2,2,2)
+    # plt.plot(data[1],color='green',label='tmp',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
+    # plt.subplot(2,2,3)
+    # plt.plot(data[2],color='blue',label='tmx',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
+    # plt.subplot(2,2,4)
+    # plt.plot(data[3],color='brown',label='tmn',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
+    # plt.show()
