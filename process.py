@@ -1,7 +1,9 @@
+# 数据预处理
+
 import netCDF4
 import numpy as np
 import math
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 # 辅助函数
 def getLocation(oriLat,oriLon):
@@ -16,6 +18,7 @@ def getLonIndex(lon):
     return int((lon+179.75)/0.5)
 
 def getLocIndex(lat,lon):
+    lat,lon = getLocation(lat,lon)
     latIndex = getLatIndex(lat)
     lonIndex = getLonIndex(lon)
     return latIndex,lonIndex
@@ -55,32 +58,34 @@ def deleteData(data,indexlist):
 
 # 读取数据
 def readData():
-    f1 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.pre.dat.nc')
-    f2 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.tmp.dat.nc')
-    f3 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.tmx.dat.nc')
-    f4 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2011.2020.tmn.dat.nc')
+    f1 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.pre.dat.nc')
+    f2 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmp.dat.nc')
+    f3 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmx.dat.nc')
+    f4 = netCDF4.Dataset('data/cru_ts4.06.2011.2020.tmn.dat.nc')
     pre = f1.variables['pre'] # 逐月降水量 10年
     tmp = f2.variables['tmp'] # 月均温 
     tmx = f3.variables['tmx'] # 月最高温
     tmn = f4.variables['tmn'] # 月最低温
-    return pre,tmp,tmx,tmn
+    lat = f1.variables['lat'] # 纬度
+    lon = f1.variables['lon'] # 经度
+    return pre,tmp,tmx,tmn,lat,lon
 
 # read metadata.txt 
 def readMetadata():
-    data = np.loadtxt("DTZT/data/metadata.txt", encoding="UTF-8")
+    data = np.loadtxt("data/metadata.txt", encoding="UTF-8")
     return data
 
 # generate numpy array save path function
 # name: the name of the numpy array
 def savePath(name):
-    path = "DTZT/dataset/"+name+".npy"
+    path = "dataset/"+name+".npy"
     return path
 
 # save numpy array as CSV file function
 # data: the numpy array
 # name: the name of the numpy array
 def saveCSV(data,name):
-    path = "DTZT/dataset/"+name+".csv"
+    path = "dataset/"+name+".csv"
     np.savetxt(path,data,delimiter=',')
 
 
@@ -105,13 +110,14 @@ def reportEnd(i):
 
 # main process function
 def process():
-    pre,tmp,tmx,tmn= readData()
+    pre,tmp,tmx,tmn,lat,lon= readData()
+    # print(lat[0],lon[0])
+    # print(lat[1],lon[1])
     metadata = readMetadata()
-    for i in range(90,len(metadata)):
+    for i in range(0,len(metadata)):
         reportStart(i)
-        lat,lon = getLocation(metadata[i][0],metadata[i][1])
+        lat,lon = getLocation(metadata[i][2],metadata[i][1])
         latIndex,lonIndex = getLocIndex(lat,lon)
-
         data1 = pre[:,latIndex,lonIndex]
         data2 = tmp[:,latIndex,lonIndex]
         data3 = tmx[:,latIndex,lonIndex]
@@ -121,10 +127,17 @@ def process():
         saveCSV(data,str(i))
         reportEnd(i)
 
+# load CSV file function
+def loadCSV(name):
+    path = "dataset/"+name+".csv"
+    data = np.loadtxt(path,delimiter=',')
+    return data
+
+
 
 if __name__ == "__main__":
     process()
-
+    
 
 
 
