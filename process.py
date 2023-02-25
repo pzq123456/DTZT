@@ -1,10 +1,8 @@
 # 数据预处理
-
 import netCDF4
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-
 # 辅助函数
 def getLocation(oriLat,oriLon):
     lat = HelpF1(oriLat,0.75,0.25)
@@ -54,14 +52,19 @@ def deleteData(data,indexlist):
     return data
 
 
-
-
 # 读取数据
 def readData():
-    f1 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.pre.dat.nc')
-    f2 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmp.dat.nc')
-    f3 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmx.dat.nc')
-    f4 = netCDF4.Dataset('data/cru_ts4.06.2011.2020.tmn.dat.nc')
+    # windows
+    # f1 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.pre.dat.nc')
+    # f2 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmp.dat.nc')
+    # f3 = netCDF4.Dataset('data/cru_ts4.06.2001.2010.tmx.dat.nc')
+    # f4 = netCDF4.Dataset('data/cru_ts4.06.2011.2020.tmn.dat.nc')
+    # linux
+    f1 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.pre.dat.nc')
+    f2 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.tmp.dat.nc')
+    f3 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2001.2010.tmx.dat.nc')
+    f4 = netCDF4.Dataset('DTZT/data/cru_ts4.06.2011.2020.tmn.dat.nc')
+
     pre = f1.variables['pre'] # 逐月降水量 10年
     tmp = f2.variables['tmp'] # 月均温 
     tmx = f3.variables['tmx'] # 月最高温
@@ -72,20 +75,30 @@ def readData():
 
 # read metadata.txt 
 def readMetadata():
-    data = np.loadtxt("data/metadata.txt", encoding="UTF-8")
+    # windows
+    # data = np.loadtxt("data/metadata.txt", encoding="UTF-8")
+
+    # linux
+    data = np.loadtxt("DTZT/data/metadata.txt", encoding="UTF-8")
     return data
 
 # generate numpy array save path function
 # name: the name of the numpy array
 def savePath(name):
-    path = "dataset/"+name+".npy"
+    # windows
+    # path = "dataset/"+name+".npy"
+    # linux
+    path = "DTZT/dataset/"+name+".npy"
     return path
 
 # save numpy array as CSV file function
 # data: the numpy array
 # name: the name of the numpy array
 def saveCSV(data,name):
-    path = "dataset/"+name+".csv"
+    # windows
+    # path = "dataset/"+name+".csv"
+    # linux
+    path = "DTZT/dataset/"+name+".csv"
     np.savetxt(path,data,delimiter=',')
 
 
@@ -124,13 +137,24 @@ def process():
         data4 = tmn[:,latIndex,lonIndex]
         data = contactLines(data1,data2,data3,data4)
         data2 = deleteData(data,getDeleteIndexList())
-        saveCSV(data,str(i))
+        # saveCSV(data,str(i))
+        print(data2.shape)
+        saveData(data2,str(i))
         reportEnd(i)
 
 # load CSV file function
 def loadCSV(name):
-    path = "dataset/"+name+".csv"
+    # path = "dataset/"+name+".csv"
+    path = "DTZT/dataset/"+name+".csv"
     data = np.loadtxt(path,delimiter=',')
+    # data = np.array(data)
+    return data
+
+def loadTxt(name):
+    # path = "dataset/"+name+".txt"
+    path = "DTZT/dataset/"+name+".txt"
+    data = np.loadtxt(path)
+    # data = np.array(data)
     return data
 
 
@@ -153,5 +177,3 @@ if __name__ == "__main__":
     # plt.subplot(2,2,4)
     # plt.plot(data[3],color='brown',label='tmn',linewidth=1,linestyle='--',marker='*',markerfacecolor='blue',markersize=3)
     # plt.show()
-
-
