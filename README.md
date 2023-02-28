@@ -1,5 +1,6 @@
 # Map production experiment 2023.2.26
-> Waring: This is the simplist data processing string line. NOT FOR PRODUCTION!
+> Warning: This is the simplist data processing string line. NOT FOR PRODUCTION!
+
 This is the repository for the map production experiment(the second semester in my junior year). We get the main idea from the paper "[Improving the Forecasting of Winter Wheat Yields in Northern China with Machine Learning–Dynamical Hybrid Subseasonal-to-Seasonal Ensemble Prediction](https://doi.org/10.3390/)". Only for their work can we do such a thing.
 # The Main result of the experiment(may be useful for you)
 ## 1. Six years of winter wheat yield data in the north of China from 2005 to 2010
@@ -45,6 +46,6 @@ If you have any questions, please put them in the "issue" or contact me by email
 > the data is too large to upload directly, so we put them in the “dataset.zip”. Jusy unzip the "dataset.zip" and put it into the "dataset" folder. Some changes may be needed in the "process.py" and "model.py" to make it work. 
 
 # Other scripts is comming soon
-* a javascript code piece to get the location for each county, utilizating the "BaiDuMaps API".
+* a javascript code piece to get the location for each county, utilizating the "BaiduMaps API".
 * a interactive 3D data visualization platform based on the "Cesium.js" library.
  
