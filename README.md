@@ -46,6 +46,8 @@ If you have any questions, please put them in the "issue" or contact me by email
 > the data is too large to upload directly, so we put them in the “dataset.zip”. Jusy unzip the "dataset.zip" and put it into the "dataset" folder. Some changes may be needed in the "process.py" and "model.py" to make it work. 
 
 # Other scripts is comming soon
-* a javascript code piece to get the location for each county, utilizating the "BaiduMaps API".
-* a interactive 3D data visualization platform based on the "Cesium.js" library.
+* Done! ~~a javascript code piece to get the location for each county, utilizating the "BaiduMaps API".~~ 
+* Done! ~~a interactive 3D data visualization platform based on the "Cesium.js" library.~~
+* You can find them in https://github.com/pzq123456/DTZTdist 
+* Live demo in https://pzq123456.github.io/DTZTdist/ (without VPN!)
  
